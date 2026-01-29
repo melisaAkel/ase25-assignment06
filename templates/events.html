@@ -1,0 +1,64 @@
+<!-- templates/events.html -->
+{% extends "layout.html" %}
+{% block content %}
+<h1>Events</h1>
+
+<div class="card">
+  <div class="btn-row">
+    <button id="prevEventsBtn" class="secondary" type="button">Prev</button>
+    <span id="eventsPageInfo" class="small"></span>
+    <button id="nextEventsBtn" class="secondary" type="button">Next</button>
+  </div>
+</div>
+
+<div id="eventsContainer"></div>
+
+<h2>My Registered Events</h2>
+<div id="myRegisteredEventsContainer"></div>
+
+<h2>My Event Requests</h2>
+<div class="card">
+  <button id="openRequestModalBtn" type="button">Request a new event</button>
+</div>
+<div id="myRequestsContainer"></div>
+
+<!-- Modal -->
+<div id="requestModalOverlay" class="overlay" style="display:none;">
+  <div class="modal">
+    <h3>Create Event Request</h3>
+
+    <label>Title</label>
+    <input id="reqTitle" type="text" />
+
+    <label>Category</label>
+    <select id="reqCategory">
+      <option value="social">social</option>
+      <option value="orientation">orientation</option>
+      <option value="study_group">study_group</option>
+    </select>
+
+    <label>Date/Time</label>
+    <input id="reqDateTime" type="datetime-local" />
+
+    <label>Location</label>
+    <input id="reqLocation" type="text" />
+
+    <label>Description</label>
+    <textarea id="reqDescription"></textarea>
+
+    <label>Quota (optional)</label>
+    <input id="reqQuota" type="number" min="0" />
+
+    <p id="requestModalMsg" class="msg"></p>
+
+    <div class="btn-row">
+      <button id="submitRequestBtn" type="button">Submit</button>
+      <button id="closeRequestModalBtn" class="secondary" type="button">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<p class="small">
+  <a href="/rooms">Rooms</a>
+</p>
+{% endblock %}

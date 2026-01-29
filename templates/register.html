@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Register</h1>
+
+<p class="small">
+  Register with your university email and a password.
+  In prototype mode, the verification code is shown in Demo Inbox.
+</p>
+
+<div class="card">
+  <label for="regEmail">University Email</label>
+  <input id="regEmail" type="email" placeholder="name@uni-bayreuth.de" />
+
+  <label for="regPassword">Password</label>
+  <input id="regPassword" type="password" placeholder="Min 6 characters" />
+
+  <button id="registerBtn" type="button">Register & Generate Code</button>
+  <p id="registerMsg" class="msg"></p>
+
+  <p class="small">
+    Next step:
+    <a href="/demo-inbox">Open Demo Inbox</a>
+    and then
+    <a href="/verify">Verify</a>
+  </p>
+
+  <p class="small">
+    Already have an account? <a href="/login">Back to login</a>
+  </p>
+</div>
+{% endblock %}

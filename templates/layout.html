@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>University Housing</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="topbar">
+    <div class="container">
+      <div class="brand">University Housing</div>
+      <div class="nav">
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+        <a href="/rooms">Rooms</a>
+        <a href="/events">Events</a>
+        <a href="/info">Info</a>
+        <a href="/admin" id="adminNavLink" style="display:none;">Admin</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+
+  <div class="container footer">
+    <div class="small">Prototype for ASE Assignment 6</div>
+  </div>
+
+  <script src="/static/app.js"></script>
+  <script>
+    (function () {
+      const role = localStorage.getItem("currentRole") || "";
+      const adminLink = document.getElementById("adminNavLink");
+      if (adminLink && role === "admin") adminLink.style.display = "inline";
+    })();
+  </script>
+</body>
+</html>

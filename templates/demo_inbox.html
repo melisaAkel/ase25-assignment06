@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Demo Inbox</h1>
+<p class="small">
+  Prototype mode: no real email is sent. Enter your email and click Verify to finalize registration.
+</p>
+
+<div class="card">
+  <label for="demoEmail">Email</label>
+  <input id="demoEmail" type="email" placeholder="name@uni-bayreuth.de" />
+
+  <div class="btn-row">
+    <button id="demoFetchBtn" type="button">Get latest code</button>
+    <button id="demoVerifyBtn" type="button" class="secondary">Verify (demo)</button>
+  </div>
+
+  <p id="demoMsg" class="msg"></p>
+
+  <div id="demoCodeBox" class="card" style="margin-top:12px; display:none;">
+    <div class="small"><strong>Pending verification found</strong></div>
+    <div class="small" id="demoCreatedAt"></div>
+    <div class="small" id="demoLastSentAt"></div>
+    <div class="small" style="margin-top:8px;">
+      Note: code is not shown because only a hash is stored.
+    </div>
+  </div>
+
+  <p class="small" style="margin-top:12px;">
+    After Verify, go to <a href="/login">Login</a>.
+  </p>
+</div>
+{% endblock %}

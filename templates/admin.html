@@ -1,0 +1,560 @@
+<!-- templates/admin.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Panel</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:#121a2b;
+      --muted:#a9b3c7;
+      --text:#eef2ff;
+      --line:rgba(255,255,255,.12);
+      --btn:#2a3a5f;
+      --btn2:#1f2b46;
+      --danger:#b33a3a;
+      --ok:#2e7d32;
+      --warn:#a06c00;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 700px at 20% 10%, #1a2b52 0%, var(--bg) 60%);
+      color:var(--text);
+    }
+    a{color:#b9d1ff}
+    .wrap{max-width:1100px;margin:24px auto;padding:0 16px}
+    .top{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      margin-bottom:16px;
+    }
+    .title{font-size:20px;font-weight:700}
+    .sub{color:var(--muted);font-size:13px}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .card{
+      background:rgba(18,26,43,.92);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+    }
+    .card h2{margin:0 0 10px 0;font-size:16px}
+    .card h3{margin:0 0 10px 0;font-size:14px;color:#d8e2ff}
+    .grow{flex:1}
+    .w50{flex:1;min-width:360px}
+    .w33{flex:1;min-width:280px}
+    .btn{
+      background:var(--btn);
+      color:var(--text);
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:9px 12px;
+      cursor:pointer;
+      font-weight:600;
+    }
+    .btn:hover{filter:brightness(1.08)}
+    .btn:disabled{opacity:.6;cursor:not-allowed}
+    .btn.secondary{background:var(--btn2)}
+    .btn.danger{background:rgba(179,58,58,.25);border-color:rgba(179,58,58,.6)}
+    .btn.ok{background:rgba(46,125,50,.25);border-color:rgba(46,125,50,.6)}
+    .btn.warn{background:rgba(160,108,0,.25);border-color:rgba(160,108,0,.6)}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 10px;border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.06);
+      font-size:12px;color:var(--muted);
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+    .item{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:12px;
+      background:rgba(255,255,255,.04);
+    }
+    .itemTop{
+      display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+    }
+    .itemTitle{font-weight:800}
+    .itemMeta{color:var(--muted);font-size:12px;margin-top:4px}
+    .itemDesc{margin-top:8px;color:#d9e0f6;font-size:13px;white-space:pre-wrap}
+    .actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+    .line{height:1px;background:var(--line);margin:12px 0}
+    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+    input, select, textarea{
+      width:100%;
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      color:var(--text);
+      border-radius:10px;
+      padding:10px 10px;
+      outline:none;
+    }
+    textarea{min-height:80px;resize:vertical}
+    .small{font-size:12px;color:var(--muted)}
+    .err{color:#ffb4b4;font-size:13px}
+    .oktxt{color:#bff0c2;font-size:13px}
+    /* Modal */
+    #modalBackdrop{
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:50;
+    }
+    #modal{
+      display:none; position:fixed; z-index:60;
+      top:8%; left:50%; transform:translateX(-50%);
+      width:min(760px, 92vw);
+      background:rgba(18,26,43,.98);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px;
+    }
+    #modalHeader{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    #modalTitle{margin:0;font-size:16px}
+    #modalBody{margin-top:10px}
+    ul{margin:8px 0 0 18px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <div class="title">Admin Panel</div>
+        <div class="sub" id="whoami">Loading admin…</div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <span class="pill" id="roomsOpenPill">Rooms: …</span>
+        <button class="btn secondary" id="refreshAllBtn" type="button">Refresh</button>
+        <button class="btn danger" id="logoutBtn" type="button">Logout</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="card w33">
+        <h2>Room Selection</h2>
+        <div class="small">Open/close whether students can join rooms.</div>
+        <div class="line"></div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <button class="btn" id="toggleRoomsOpenBtn" type="button">Toggle</button>
+          <span class="small" id="roomsOpenLabel">Loading…</span>
+        </div>
+        <div class="line"></div>
+        <div class="small">When closed: students cannot join new rooms. Existing bookings remain.</div>
+      </div>
+
+      <div class="card w33">
+        <h2>Quick Checks</h2>
+        <div class="grid">
+          <div class="item">
+            <div class="itemTitle">Rooms & Students</div>
+            <div class="itemMeta">Use “View students” inside rooms list.</div>
+          </div>
+          <div class="item">
+            <div class="itemTitle">Events & Students</div>
+            <div class="itemMeta">Use “View students” inside events list.</div>
+          </div>
+          <div class="item">
+            <div class="itemTitle">Event Requests</div>
+            <div class="itemMeta">Accept/Reject pending requests below.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card w33">
+        <h2>Status</h2>
+        <div id="statusBox" class="small">Ready.</div>
+        <div class="line"></div>
+        <div class="small">If something fails, check that you are logged in as admin and your admin email exists in DB.</div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:12px;">
+      <div class="card w50">
+        <h2>Rooms</h2>
+        <div id="roomsList" class="grid"></div>
+      </div>
+
+      <div class="card w50">
+        <h2>Events</h2>
+        <div id="eventsList" class="grid"></div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:12px;">
+      <div class="card grow">
+        <h2>Event Requests</h2>
+
+        <div style="display:flex; gap:10px; align-items:end; flex-wrap:wrap;">
+          <div style="width:220px;">
+            <label for="reqStatusSel">Status</label>
+            <select id="reqStatusSel">
+              <option value="pending" selected>pending</option>
+              <option value="accepted">accepted</option>
+              <option value="rejected">rejected</option>
+            </select>
+          </div>
+          <button class="btn secondary" id="loadReqBtn" type="button">Load</button>
+          <div class="small" id="reqHint">Pending requests can be accepted or rejected.</div>
+        </div>
+
+        <div class="line"></div>
+        <div id="requestsList" class="grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modalBackdrop"></div>
+  <div id="modal">
+    <div id="modalHeader">
+      <h3 id="modalTitle">Students</h3>
+      <button class="btn secondary" id="modalCloseBtn" type="button">Close</button>
+    </div>
+    <div id="modalBody">Loading…</div>
+  </div>
+
+  <script>
+    // IMPORTANT: your app.js uses:
+    // localStorage.setItem("currentEmail", email)
+    // localStorage.setItem("currentRole", role)
+    function getAdminEmail() {
+      return (localStorage.getItem("currentEmail") || "").trim().toLowerCase();
+    }
+    function getRole() {
+      return (localStorage.getItem("currentRole") || "").trim().toLowerCase();
+    }
+
+    const whoami = document.getElementById("whoami");
+    const statusBox = document.getElementById("statusBox");
+
+    function setStatus(msg, isError=false){
+      statusBox.innerHTML = isError ? `<div class="err">${escapeHtml(msg)}</div>` : `<div class="small">${escapeHtml(msg)}</div>`;
+    }
+
+    async function apiGet(url) {
+      const res = await fetch(url);
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Request failed");
+      return data;
+    }
+
+    async function apiPost(url, body) {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify(body || {}),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Request failed");
+      return data;
+    }
+
+    function escapeHtml(s) {
+      return String(s || "").replace(/[&<>"']/g, (c) => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    // ---------------- Modal ----------------
+    const backdrop = document.getElementById("modalBackdrop");
+    const modal = document.getElementById("modal");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalBody = document.getElementById("modalBody");
+
+    document.getElementById("modalCloseBtn").addEventListener("click", closeModal);
+    backdrop.addEventListener("click", closeModal);
+
+    function openModal(title){
+      modalTitle.textContent = title;
+      modalBody.textContent = "Loading…";
+      backdrop.style.display = "block";
+      modal.style.display = "block";
+    }
+    function closeModal(){
+      backdrop.style.display = "none";
+      modal.style.display = "none";
+    }
+    function renderStudents(students){
+      if (!students || students.length === 0) return "<p>No students.</p>";
+      const items = students.map(s => {
+        const t = s.joined_at || s.registered_at || "";
+        return `<li><b>${escapeHtml(s.email)}</b> <span style="opacity:.75">(${escapeHtml(t)})</span></li>`;
+      }).join("");
+      return `<ul>${items}</ul>`;
+    }
+
+    // ---------------- Rooms open/close ----------------
+    const roomsOpenPill = document.getElementById("roomsOpenPill");
+    const roomsOpenLabel = document.getElementById("roomsOpenLabel");
+    const toggleRoomsOpenBtn = document.getElementById("toggleRoomsOpenBtn");
+
+    async function loadRoomsOpen(){
+      const admin = getAdminEmail();
+      const data = await apiGet(`/api/admin/settings/rooms_open?admin_email=${encodeURIComponent(admin)}`);
+      const open = !!data.open;
+      toggleRoomsOpenBtn.dataset.current = open ? "1" : "0";
+      toggleRoomsOpenBtn.textContent = open ? "Close" : "Open";
+      roomsOpenLabel.textContent = open ? "Currently OPEN" : "Currently CLOSED";
+      roomsOpenPill.textContent = open ? "Rooms: OPEN" : "Rooms: CLOSED";
+    }
+
+    toggleRoomsOpenBtn.addEventListener("click", async () => {
+      try{
+        const admin = getAdminEmail();
+        const current = toggleRoomsOpenBtn.dataset.current === "1";
+        const next = !current;
+        const data = await apiPost("/api/admin/settings/rooms_open", { admin_email: admin, open: next });
+        const open = !!data.open;
+        toggleRoomsOpenBtn.dataset.current = open ? "1" : "0";
+        toggleRoomsOpenBtn.textContent = open ? "Close" : "Open";
+        roomsOpenLabel.textContent = open ? "Currently OPEN" : "Currently CLOSED";
+        roomsOpenPill.textContent = open ? "Rooms: OPEN" : "Rooms: CLOSED";
+        setStatus("Room selection setting updated.");
+      }catch(e){
+        setStatus(e.message, true);
+        alert(e.message);
+      }
+    });
+
+    // ---------------- Rooms list ----------------
+    const roomsList = document.getElementById("roomsList");
+
+    function roomLine(r){
+      const remaining = (r.remaining ?? 0);
+      const cap = r.capacity ?? "?";
+      const booked = r.booked_count ?? 0;
+      const isFull = !!r.is_full;
+      const badge = isFull ? `<span class="pill" style="border-color:rgba(179,58,58,.6);color:#ffb4b4;">FULL</span>`
+                           : `<span class="pill">Remaining: ${remaining}</span>`;
+      return `
+        <div class="item">
+          <div class="itemTop">
+            <div>
+              <div class="itemTitle">${escapeHtml(r.title)} <span class="small">(${escapeHtml(r.type)})</span></div>
+              <div class="itemMeta">Price: €${escapeHtml(r.price_eur)} · Capacity: ${escapeHtml(cap)} · Booked: ${escapeHtml(booked)}</div>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center;">${badge}</div>
+          </div>
+          <div class="itemDesc">${escapeHtml(r.description)}</div>
+          <div class="actions">
+            <button class="btn secondary" type="button"
+              onclick="viewRoomStudents(${r.id}, '${escapeHtml(r.title).replace(/'/g, "\\'")}')">
+              View students
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadRooms(){
+      const admin = getAdminEmail();
+      const data = await apiGet(`/api/admin/rooms?admin_email=${encodeURIComponent(admin)}`);
+      roomsList.innerHTML = data.map(roomLine).join("") || "<div class='small'>No rooms found.</div>";
+    }
+
+    async function viewRoomStudents(roomId, roomTitle){
+      try{
+        const admin = getAdminEmail();
+        openModal(`Room: ${roomTitle}`);
+        const data = await apiGet(`/api/admin/rooms/${roomId}/students?admin_email=${encodeURIComponent(admin)}`);
+        modalBody.innerHTML = renderStudents(data.students);
+      }catch(e){
+        modalBody.innerHTML = `<p class="err">${escapeHtml(e.message)}</p>`;
+      }
+    }
+    window.viewRoomStudents = viewRoomStudents;
+
+    // ---------------- Events list ----------------
+    const eventsList = document.getElementById("eventsList");
+
+    function eventLine(e){
+      const quota = (e.quota === null || e.quota === undefined) ? "∞" : e.quota;
+      const remaining = (e.remaining === null || e.remaining === undefined) ? "∞" : e.remaining;
+      const isFull = !!e.is_full;
+      const badge = isFull ? `<span class="pill" style="border-color:rgba(179,58,58,.6);color:#ffb4b4;">FULL</span>`
+                           : `<span class="pill">Remaining: ${escapeHtml(remaining)}</span>`;
+      return `
+        <div class="item">
+          <div class="itemTop">
+            <div>
+              <div class="itemTitle">${escapeHtml(e.title)} <span class="small">(${escapeHtml(e.category)})</span></div>
+              <div class="itemMeta">${escapeHtml(e.date_time)} · ${escapeHtml(e.location)} · Quota: ${escapeHtml(quota)} · Registered: ${escapeHtml(e.registered_count)}</div>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center;">${badge}</div>
+          </div>
+          <div class="itemDesc">${escapeHtml(e.description)}</div>
+          <div class="actions">
+            <button class="btn secondary" type="button"
+              onclick="viewEventStudents(${e.id}, '${escapeHtml(e.title).replace(/'/g, "\\'")}')">
+              View students
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadEvents(){
+      const admin = getAdminEmail();
+      const data = await apiGet(`/api/admin/events?admin_email=${encodeURIComponent(admin)}`);
+      eventsList.innerHTML = data.map(eventLine).join("") || "<div class='small'>No events found.</div>";
+    }
+
+    async function viewEventStudents(eventId, eventTitle){
+      try{
+        const admin = getAdminEmail();
+        openModal(`Event: ${eventTitle}`);
+        const data = await apiGet(`/api/admin/events/${eventId}/students?admin_email=${encodeURIComponent(admin)}`);
+        modalBody.innerHTML = renderStudents(data.students);
+      }catch(e){
+        modalBody.innerHTML = `<p class="err">${escapeHtml(e.message)}</p>`;
+      }
+    }
+    window.viewEventStudents = viewEventStudents;
+
+    // ---------------- Event Requests ----------------
+    const reqStatusSel = document.getElementById("reqStatusSel");
+    const loadReqBtn = document.getElementById("loadReqBtn");
+    const requestsList = document.getElementById("requestsList");
+    const reqHint = document.getElementById("reqHint");
+
+    function reqBadge(status){
+      if (status === "accepted") return `<span class="pill" style="border-color:rgba(46,125,50,.6);color:#bff0c2;">accepted</span>`;
+      if (status === "rejected") return `<span class="pill" style="border-color:rgba(179,58,58,.6);color:#ffb4b4;">rejected</span>`;
+      return `<span class="pill" style="border-color:rgba(160,108,0,.6);color:#ffd89a;">pending</span>`;
+    }
+
+    function reqLine(r){
+      const quota = (r.quota === null || r.quota === undefined) ? "∞" : r.quota;
+      const comment = r.admin_comment ? `\n\nAdmin comment:\n${r.admin_comment}` : "";
+      const actionButtons = (r.status === "pending") ? `
+        <div class="line"></div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+          <div>
+            <label>Reject comment (required for reject)</label>
+            <textarea id="rej_${r.id}" placeholder="Reason for rejection..."></textarea>
+          </div>
+          <div style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
+            <button class="btn ok" type="button" onclick="acceptReq(${r.id})">Accept & Publish</button>
+            <button class="btn danger" type="button" onclick="rejectReq(${r.id})">Reject</button>
+          </div>
+        </div>
+      ` : "";
+
+      return `
+        <div class="item">
+          <div class="itemTop">
+            <div>
+              <div class="itemTitle">${escapeHtml(r.title)} <span class="small">(${escapeHtml(r.category)})</span></div>
+              <div class="itemMeta">${escapeHtml(r.date_time)} · ${escapeHtml(r.location)} · Quota: ${escapeHtml(quota)} · By: ${escapeHtml(r.requested_by_email)}</div>
+            </div>
+            <div>${reqBadge(r.status)}</div>
+          </div>
+          <div class="itemDesc">${escapeHtml(r.description)}${escapeHtml(comment)}</div>
+          ${actionButtons}
+        </div>
+      `;
+    }
+
+    async function loadRequests(){
+      const admin = getAdminEmail();
+      const status = reqStatusSel.value;
+      if (status === "pending") reqHint.textContent = "Pending requests can be accepted or rejected.";
+      if (status === "accepted") reqHint.textContent = "Accepted requests are already published to Events.";
+      if (status === "rejected") reqHint.textContent = "Rejected requests include an admin comment.";
+
+      const data = await apiGet(`/api/admin/event-requests?status=${encodeURIComponent(status)}&admin_email=${encodeURIComponent(admin)}`);
+      requestsList.innerHTML = data.map(reqLine).join("") || "<div class='small'>No requests in this status.</div>";
+    }
+
+    async function acceptReq(reqId){
+      try{
+        const admin = getAdminEmail();
+        await apiPost(`/api/admin/event-requests/${reqId}/decision`, {
+          admin_email: admin,
+          action: "accept",
+          comment: ""
+        });
+        setStatus("Request accepted and published.");
+        await loadRequests();
+        await loadEvents();
+      }catch(e){
+        setStatus(e.message, true);
+        alert(e.message);
+      }
+    }
+    async function rejectReq(reqId){
+      try{
+        const admin = getAdminEmail();
+        const txt = document.getElementById(`rej_${reqId}`);
+        const comment = (txt ? txt.value : "").trim();
+        await apiPost(`/api/admin/event-requests/${reqId}/decision`, {
+          admin_email: admin,
+          action: "reject",
+          comment: comment
+        });
+        setStatus("Request rejected.");
+        await loadRequests();
+      }catch(e){
+        setStatus(e.message, true);
+        alert(e.message);
+      }
+    }
+    window.acceptReq = acceptReq;
+    window.rejectReq = rejectReq;
+
+    loadReqBtn.addEventListener("click", async () => {
+      try{ await loadRequests(); setStatus("Requests loaded."); }catch(e){ setStatus(e.message, true); }
+    });
+
+    // ---------------- Top buttons ----------------
+    document.getElementById("refreshAllBtn").addEventListener("click", async () => {
+      try{
+        await refreshAll();
+        setStatus("Refreshed.");
+      }catch(e){
+        setStatus(e.message, true);
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("currentEmail");
+      localStorage.removeItem("currentRole");
+      window.location.href = "/login";
+    });
+
+    async function refreshAll(){
+      await loadRoomsOpen();
+      await loadRooms();
+      await loadEvents();
+      await loadRequests();
+    }
+
+    // ---------------- Init ----------------
+    (async function init(){
+      const email = getAdminEmail();
+      const role = getRole();
+
+      if (!email){
+        window.location.href = "/login";
+        return;
+      }
+      if (role !== "admin"){
+        whoami.innerHTML = `Signed in as <b>${escapeHtml(email)}</b> (role: ${escapeHtml(role || "unknown")}) — admin required`;
+      } else {
+        whoami.innerHTML = `Signed in as <b>${escapeHtml(email)}</b> (admin)`;
+      }
+
+      try{
+        await refreshAll();
+        setStatus("Loaded.");
+      }catch(e){
+        setStatus(e.message, true);
+      }
+    })();
+  </script>
+</body>
+</html>

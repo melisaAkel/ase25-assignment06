@@ -1,0 +1,250 @@
+:root {
+  --bg: #0b0c10;
+  --card: #14161d;
+  --text: #e9eef5;
+  --muted: #a9b3c1;
+  --border: #2a2f3a;
+  --link: #8ab4ff;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container {
+  width: min(980px, 92vw);
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.topbar {
+  border-bottom: 1px solid var(--border);
+  background: rgba(10, 12, 18, 0.8);
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(8px);
+}
+
+.brand { font-weight: 700; letter-spacing: 0.3px; }
+
+.nav {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin: 14px 0;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 820px) {
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #0f1117;
+  color: var(--text);
+  outline: none;
+}
+
+button {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #1d2230;
+  color: var(--text);
+  cursor: pointer;
+}
+button:hover { filter: brightness(1.07); }
+button:disabled { opacity: 0.6; cursor: not-allowed; }
+button.secondary { background: transparent; }
+
+.icon-btn {
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #1d2230;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.msg { margin-top: 10px; color: var(--muted); }
+.small { font-size: 13px; color: var(--muted); }
+
+.footer {
+  border-top: 1px solid var(--border);
+  margin-top: 30px;
+  padding: 10px 0;
+  color: var(--muted);
+}
+
+/* Full / faded logic */
+.card.is-full {
+  opacity: 0.55;
+  filter: grayscale(0.35);
+}
+.card.is-past {
+  opacity: 0.45;
+  filter: grayscale(0.45);
+}
+
+/* Events header */
+.events-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 1000;
+}
+
+.modal {
+  width: min(680px, 96vw);
+  margin: 0;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 10px 0 0 0;
+}
+
+/* Info tabs */
+.info-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 0 6px 0;
+}
+
+.tab {
+  border: 1px solid var(--border);
+  background: #0f1117;
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+/* Event registration buttons row */
+.btn-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--muted);
+  background: #0f1117;
+}
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding: 8px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: #0f1117;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.chip.active {
+  background: #1d2230;
+}
+
+textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #0f1117;
+  color: var(--text);
+  outline: none;
+}
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  z-index: 999;
+}
+
+.modal {
+  width: 100%;
+  max-width: 640px;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}

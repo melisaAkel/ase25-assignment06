@@ -1,0 +1,9 @@
+<!-- templates/info.html -->
+{% extends "layout.html" %}
+{% block content %}
+<h1>Info</h1>
+<div id="infoContainer"></div>
+<script>
+  window.INFO_SLUG = "{{ slug }}";
+</script>
+{% endblock %}

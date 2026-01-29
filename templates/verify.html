@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1>Demo Inbox</h1>
+
+<p class="small">
+  Prototype mode: no real email is sent. Enter your email to view the latest verification code.
+</p>
+
+<div class="card">
+  <label for="demoEmail">Email</label>
+  <input id="demoEmail" type="email" placeholder="name@uni-bayreuth.de" />
+
+  <div class="btn-row">
+    <button id="demoFetchBtn" type="button">Get latest code</button>
+    <a class="secondary" href="/verify" style="display:inline-block; padding:10px 14px; border-radius:10px; text-decoration:none;">
+      Go to Verify
+    </a>
+  </div>
+
+  <p id="demoMsg" class="msg"></p>
+
+  <div id="demoCodeBox" class="card" style="display:none; margin-top:12px;">
+    <h3 style="margin-top:0;">Code:</h3>
+    <div style="font-size:28px; font-weight:700; letter-spacing:2px;" id="demoCode">------</div>
+    <p class="small" id="demoCreatedAt"></p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+<!-- templates/rooms.html -->
+{% extends "layout.html" %}
+{% block content %}
+<h1>Rooms</h1>
+<p class="small" id="roomsGlobalMsg"></p>
+<p class="small" id="roomsLockMsg"></p>
+
+<div id="myRoomCard" class="card" style="display:none;">
+  <h3>My Room</h3>
+  <div id="myRoomDetails"></div>
+  <button id="leaveRoomBtn" class="secondary" type="button">Leave room</button>
+  <p id="leaveRoomMsg" class="msg"></p>
+</div>
+
+<div id="roomsContainer"></div>
+
+<p class="small">
+  <a href="/events">Events</a> • <a href="/login">Logout (just clears storage manually)</a>
+</p>
+{% endblock %}

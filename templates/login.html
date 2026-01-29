@@ -1,0 +1,25 @@
+<!-- templates/login.html -->
+{% extends "layout.html" %}
+{% block content %}
+<h1>Login</h1>
+
+<div class="card">
+  <label for="loginEmail">University Email</label>
+  <input id="loginEmail" type="email" placeholder="name@uni-bayreuth.de" />
+
+  <label for="loginPassword">Password</label>
+  <input id="loginPassword" type="password" placeholder="Your password" />
+
+  <button id="loginBtn" type="button">Login</button>
+  <p id="loginMsg" class="msg"></p>
+
+  <p class="small">
+    No account? <a href="/register">Register</a>
+  </p>
+</div>
+
+<script>
+  // Do NOT redirect automatically here.
+  // app.js handles login button click and redirect after successful login.
+</script>
+{% endblock %}
